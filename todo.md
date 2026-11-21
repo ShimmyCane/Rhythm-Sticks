@@ -132,3 +132,4 @@ Nothing marked done in the table yet.
 - [x] Marbles: two-finger speed, mood and bounce, a switch for each, wider sides, stuck marbles nudged.
 - [ ] Echo: the "mini autograph" (c): waiting for Jimmy's answer, convo v0.14 Q3.
 - [ ] Try 0.4.0 on the iPad, then mark the notes done in the table.
+- [x] 2026-11-21: all 22 notes marked done in `rs_notes` at Jimmy's request (he reopens any that are still a problem). The questions in `convo/convo v0.14.md` stay open.

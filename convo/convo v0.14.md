@@ -47,3 +47,9 @@ Nothing is marked done in the table. A note is marked done only after you have t
   Answer:
 5. After you have tried 0.4.0 on the iPad, which of the 22 notes can I mark done?
   Answer:
+
+---
+
+## Update (2026-11-21, later)
+
+Jimmy asked that all notes be marked done after a build, and he will reopen any that are still a problem. All 22 notes were marked done in `rs_notes` (read back: the table has 36 notes, all done). The open items above stay as questions here; the mini autograph and the other questions are not lost by the mark.
