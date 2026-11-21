@@ -2,7 +2,7 @@
 (function () {
   'use strict';
   var RS = window.RS = {
-    version: '0.3.3',
+    version: '0.4.0',
     modes: {},
     order: ['ripples', 'beads', 'pads', 'strings', 'span', 'heat', 'echo', 'marbles', 'dotloop', 'footsteps', 'hum'],
     hidden: ['breathe'],                 // reachable only from the gear panel (or #breathe), never picked at random
@@ -15,9 +15,13 @@
   // ---- Settings (one object, saved on this device, always inside try/catch) ----
   var DEFAULTS = { keepGear: false, volume: 0.8, scale: 'penta', sens: 0.5, speed: 'normal',
     strings: 'auto', outlines: false, glide: 'steps', showErrors: false, garden: 'sand',
-    rippleY: 'none', echoLevel: 'auto', footMode: 'road', roadBeat: true };
+    rippleY: 'sustain', migr: 0, mbSpeedCtl: 'on', echoWait: 'on', mbMoodCtl: 'on', mbEnergyCtl: 'on', echoLevel: 'auto', footMode: 'road', roadBeat: true };
   RS.settings = Object.assign({}, DEFAULTS);
   try { Object.assign(RS.settings, JSON.parse(localStorage.getItem('rs.settings') || '{}')); } catch (e) { /* storage blocked */ }
+  if (!RS.settings.migr) {            // 0.4.0: Ripples' up and down now starts on Sustain, even where an older choice was saved
+    RS.settings.rippleY = 'sustain'; RS.settings.migr = 1;
+    try { localStorage.setItem('rs.settings', JSON.stringify(RS.settings)); } catch (e) { /* storage blocked */ }
+  }
   var setListeners = [];
   RS.set = function (key, value) {
     RS.settings[key] = value;

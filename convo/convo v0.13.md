@@ -52,3 +52,25 @@ Checked in the code. Please try them on the iPad and say yes or no.
 - Q12. Settings toggles: one toggle for each two-finger control (speed, mood, energy), or one toggle for all two-finger controls? Which?
 
   Answer:
+
+---
+
+## Answers (2026-11-21)
+
+Jimmy: "Yes to all for now."
+
+- **A, built in 0.3.3:** yes to all eight items. Marked done in `rs_notes` (nine notes; item 3 is two notes, asntq and eu49e). Read back to confirm.
+- **Q1 shapes:** yes.
+- **Q2 dot loop:** yes to outward growth and dash-and-dot rings. "Anything else missing": not answered.
+- **Q3 echo:** yes to (a), (b) and (d). (c), the mini autograph: not answered, left open.
+- **Q4 clef:** yes.
+- **Q5 ripples default:** yes.
+- **Q6 session storage:** not answered (device or family table).
+- **Q7 click to breathe:** yes.
+- **Q8 marbles speed:** yes.
+- **Q9 marbles mood:** yes.
+- **Q10 energy numbers:** not answered.
+- **Q11 peg space:** yes.
+- **Q12 toggles:** not answered (one per control or one for all).
+
+Not yet built. The builds start when Jimmy says go on the next increment.

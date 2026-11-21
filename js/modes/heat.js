@@ -99,18 +99,33 @@
   // ---- staff drawing ----
   var LETTER = [0, 0, 1, 1, 2, 3, 3, 4, 4, 5, 5, 6], SHARP = [0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 0];
   function diatonic(m) { return (Math.floor(m / 12) - 1) * 7 + LETTER[((m % 12) + 12) % 12]; }
+  // The G clef, drawn as one thin line: the bowl circles the G line, the stem climbs into the top lobe and runs down to a curl.
+  function trebleClef(g, gx, gap, yOf) {
+    function P(x, d) { if (d < 28) d = 28 - (28 - d) * 0.35; return [gx + x * gap, yOf(d)]; }     // the tail is kept short so it clears the bass staff below
+    function C(a, b, c) { var p = P(a[0], a[1]), q = P(b[0], b[1]), r = P(c[0], c[1]); g.bezierCurveTo(p[0], p[1], q[0], q[1], r[0], r[1]); }
+    g.save(); g.strokeStyle = RS.pal.ink; g.lineCap = 'round'; g.lineJoin = 'round'; g.lineWidth = 4;
+    g.beginPath();
+    var s0 = P(0.15, 32.4); g.moveTo(s0[0], s0[1]);
+    C([0.55, 32.4], [0.75, 33.6], [0.35, 34.4]);
+    C([-0.4, 35.3], [-1.2, 34.0], [-1.1, 31.8]);
+    C([-1.0, 29.8], [0.2, 28.7], [1.0, 29.8]);
+    C([1.7, 30.9], [1.5, 33.6], [0.5, 35.8]);
+    C([-0.2, 37.4], [-0.6, 39.6], [-0.15, 41.2]);
+    C([0.05, 41.9], [0.35, 41.5], [0.4, 40.6]);
+    C([0.45, 39.2], [0.15, 37.0], [-0.2, 34.0]);
+    C([-0.35, 31.0], [-0.35, 28.0], [-0.3, 26.0]);
+    C([-0.25, 24.6], [-1.0, 24.2], [-1.0, 25.2]);
+    C([-1.0, 26.0], [-0.4, 26.1], [-0.35, 25.4]);
+    g.stroke(); g.restore();
+  }
   function drawStaff(g, w, h, notes) {
     var gap = Math.max(14, Math.min(28, h * 0.034)), cx0 = w * 0.1, cx1 = w * 0.9, yc = h * 0.5;       // yc: middle C
     function yOf(d) { return yc - (d - 28) * gap / 2; }
     g.strokeStyle = RS.pal.ink; g.lineWidth = 2.5; g.lineCap = 'round';
     [30, 32, 34, 36, 38, 18, 20, 22, 24, 26].forEach(function (d) { g.beginPath(); g.moveTo(cx0, yOf(d)); g.lineTo(cx1, yOf(d)); g.stroke(); });
     g.lineWidth = 4; g.beginPath(); g.moveTo(cx0, yOf(38)); g.lineTo(cx0, yOf(18)); g.stroke();
-    // Treble clef (a drawn spiral) and bass clef (a drawn hook).
-    g.lineWidth = 4; g.beginPath();
-    var gx = cx0 + gap * 2.2, gy = yOf(32);
-    g.moveTo(gx - gap * 0.2, yOf(27)); g.bezierCurveTo(gx + gap * 0.9, yOf(28), gx + gap * 0.9, yOf(33.5), gx, yOf(33.5));
-    g.bezierCurveTo(gx - gap * 1.2, yOf(33.5), gx - gap * 1.2, yOf(29), gx + gap * 0.1, yOf(29.2)); g.bezierCurveTo(gx + gap * 0.8, yOf(29.4), gx + gap * 0.7, yOf(32.3), gx, yOf(32.3));
-    g.moveTo(gx, yOf(39.5)); g.bezierCurveTo(gx + gap * 0.6, yOf(37), gx - gap * 0.2, yOf(35), gx - gap * 0.3, yOf(31)); g.lineTo(gx - gap * 0.3, yOf(26)); g.stroke();
+    // Treble clef (a G clef, the bowl round the G line) and bass clef (a drawn hook).
+    trebleClef(g, cx0 + gap * 2.6, gap, yOf);
     var bx = cx0 + gap * 2.2, by = yOf(24);                        // the bass clef starts on the F line
     g.beginPath(); g.moveTo(bx - gap * 1.0, by - gap * 0.35);
     g.bezierCurveTo(bx - gap * 0.4, by - gap * 1.5, bx + gap * 1.1, by - gap * 1.2, bx + gap * 0.7, by + gap * 0.2);

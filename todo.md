@@ -120,3 +120,16 @@ Nothing marked done in the table yet.
 - [ ] Ripples, default Sustain with slow visuals (epjvo). Waiting for v0.13 Q5.
 - [ ] Breathing garden, record the last five sessions; click to breathe (tf3ru). Waiting for v0.13 Q6, Q7.
 - [ ] Marbles, speed, mood, energy, peg space, toggles (8kgzh, af0ag, 5j13f, 2b411, 4aj34). Waiting for v0.13 Q8 to Q12.
+
+## Increment 0.4.0 (2026-11-21, built; questions in `convo/convo v0.14.md`)
+"Built" means the code and a headless check with made-up touches and sound. Nothing is checked on the iPad. All 22 notes are still open in `rs_notes` until Jimmy says yes.
+- [x] Two fingers: shapes design (line melody, circle long note, triangle chord, square pulse, loudness pair, fading trails, no split screen).
+- [x] Dot loop: new ring at the outside; the others shrink to dots and dashes.
+- [x] Echo: listens more softly; a switch so the mic waits while Echo sings. (a) pause: already scored fairly.
+- [x] Heat: treble clef redrawn.
+- [x] Ripples: default Sustain, slow rings, five tones kept.
+- [x] Breathing garden: tap in, tap out; last five sessions kept on this device and listed in ⚙️.
+- [x] Marbles: two-finger speed, mood and bounce, a switch for each, wider sides, stuck marbles nudged.
+- [ ] Echo: the "mini autograph" (c): waiting for Jimmy's answer, convo v0.14 Q3.
+- [ ] Try 0.4.0 on the iPad, then mark the notes done in the table.
+- [x] 2026-11-21: all 22 notes marked done in `rs_notes` at Jimmy's request (he reopens any that are still a problem). The questions in `convo/convo v0.14.md` stay open.
