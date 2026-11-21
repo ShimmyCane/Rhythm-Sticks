@@ -52,3 +52,9 @@ Checked in the code. Please try them on the iPad and say yes or no.
 - Q12. Settings toggles: one toggle for each two-finger control (speed, mood, energy), or one toggle for all two-finger controls? Which?
 
   Answer:
+
+---
+
+## Closed (2026-11-21)
+
+No answers were given to this round, so nothing below was built or marked done from it. The questions and the twelve items (A 1–8, B Q1–Q12) carry forward unchanged into `convo/convo v0.13.md`, where they can be answered. The 0.3.3 items are still waiting for a yes or no before they are marked done in the table.

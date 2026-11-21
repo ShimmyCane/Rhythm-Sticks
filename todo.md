@@ -99,7 +99,7 @@ Nothing built yet. Questions in convo v0.9. Not marked done (no yes yet).
 - [ ] Answer 3, Two fingers shapes design: not built (largest open item); waiting for Jimmy's yes to start it.
 - [ ] Try 0.3.3 on the iPad: mic rest and busy message, strings wake, breathing sun, Heat dot fade.
 
-## Notes read 2026-11-21 (22 open notes from `rs_notes`, version 0.3.3; questions in `convo/convo v0.12.md`)
+## Notes read 2026-11-21 (22 open notes from `rs_notes`, version 0.3.3; questions in `convo/convo v0.13.md`, v0.12 closed)
 Nothing marked done in the table yet.
 
 ### Built in 0.3.3, waiting for Jimmy's yes to mark done
@@ -113,10 +113,10 @@ Nothing marked done in the table yet.
 - [x] Two fingers, wider note range and colour (172kz). Code: wider range.
 
 ### Not built
-- [ ] Two fingers, shapes and trails (d63z3, 01kqb). Waiting for Q1.
-- [ ] Dot loop, outward growth and dash-and-dot rings (7c93e, ez1s5). Waiting for Q2.
-- [ ] Echo, pause, threshold, mini autograph, delay-mic toggle (qvy34). Waiting for Q3.
-- [ ] Heat, more accurate treble clef in the thin stroke (aqf3j). Waiting for Q4.
-- [ ] Ripples, default Sustain with slow visuals (epjvo). Waiting for Q5.
-- [ ] Breathing garden, record the last five sessions; click to breathe (tf3ru). Waiting for Q6, Q7.
-- [ ] Marbles, speed, mood, energy, peg space, toggles (8kgzh, af0ag, 5j13f, 2b411, 4aj34). Waiting for Q8 to Q12.
+- [ ] Two fingers, shapes and trails (d63z3, 01kqb). Waiting for v0.13 Q1.
+- [ ] Dot loop, outward growth and dash-and-dot rings (7c93e, ez1s5). Waiting for v0.13 Q2.
+- [ ] Echo, pause, threshold, mini autograph, delay-mic toggle (qvy34). Waiting for v0.13 Q3.
+- [ ] Heat, more accurate treble clef in the thin stroke (aqf3j). Waiting for v0.13 Q4.
+- [ ] Ripples, default Sustain with slow visuals (epjvo). Waiting for v0.13 Q5.
+- [ ] Breathing garden, record the last five sessions; click to breathe (tf3ru). Waiting for v0.13 Q6, Q7.
+- [ ] Marbles, speed, mood, energy, peg space, toggles (8kgzh, af0ag, 5j13f, 2b411, 4aj34). Waiting for v0.13 Q8 to Q12.
