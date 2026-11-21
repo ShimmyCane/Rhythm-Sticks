@@ -91,3 +91,10 @@ Nothing built yet. Questions in convo v0.9. Not marked done (no yes yet).
 - [x] Mic rest and busy message; one mode panel; Ripples card; strings wake; heat dots fade; breathing countdown removed and five-minute sun; dot loop two-tap clear; wider two-finger range.
 - [ ] Two fingers shapes (answer 3): the next increment.
 - [ ] Dot loop outward rings and dash-and-dot marks (answer 2, first part).
+
+## Round of 2026-11-21 (reply to convo v0.10; see `convo/convo v0.11.md`)
+- [x] Answers 1, 4, 5 are in the 0.3.3 code (checked in the source).
+- [x] Answers 6, 7, 8, 9 were built as the recommended or drafted choice; waiting for Jimmy to confirm (convo v0.11 questions).
+- [ ] Answer 2, outward rings and dash-and-dot marks in Dot loop: not built.
+- [ ] Answer 3, Two fingers shapes design: not built (largest open item); waiting for Jimmy's yes to start it.
+- [ ] Try 0.3.3 on the iPad: mic rest and busy message, strings wake, breathing sun, Heat dot fade.
