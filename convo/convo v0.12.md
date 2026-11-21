@@ -1,0 +1,60 @@
+# Rhythm Sticks — Convo v0.12
+
+**Project:** Rhythm Sticks
+**Round:** 22 open notes read from `rs_notes` on 2026-11-21 (version 0.3.3 notes; the older ones are already marked done)
+
+Notes are copied as written. Answer inline under each question. Nothing is marked done in the table until you say yes.
+
+## A. Built in 0.3.3 (waiting for your yes to mark done)
+
+Checked in the code. Please try them on the iPad and say yes or no.
+1. Echo, mic goes quiet when another app has it (3ejb1): rests after 30 s, tap to wake, names the other app.
+2. Dot loop, middle needs two taps (lzggf).
+3. Heat, three dots fade after 3 s (asntq, eu49e).
+4. Ripples card, two sentences (2l2ea).
+5. Breathing garden, no countdown; sun over five minutes (z0x5l).
+6. Strings, audio that sometimes doesn't work: every pluck wakes the sound (qu6gc).
+7. What each mode does: one panel, current mode only (cqrlt).
+8. Two fingers, wider note range and colour (172kz).
+
+  Answer (yes / no for each number):
+
+## B. Not built, needs your answer
+
+**Two fingers, shapes (d63z3, 01kqb).** You wrote "I thought we improved this with the triangle square and other trails". The shapes are not in the code yet: 0.3.3 only widened the range. This is the design from convo v0.9 that you said "I love it" to in v0.10.
+- Q1. Shall the next increment build the shapes as written in v0.10 answer 3? Yes / no.
+
+**Dot loop (7c93e, ez1s5).** Outward growth and dash-and-dot marks are not built. "Some changes were not complete" (ez1s5) is about the same work. Which other changes do you mean?
+- Q2. Build the outward growth and dash-and-dot rings now? Yes / no. Anything else missing?
+
+**Echo (qvy34, from 0.3.2).** Four points:
+(a) a short pause between the sounds and your echo, scored fairly;
+(b) the input threshold is too high, you have to shout close to the microphone;
+(c) a "mini autograph", and try to match the right pitch;
+(d) a settings toggle to delay the microphone, so the echo comes after the sounds, for when the mic can't listen and play at once.
+- Q3. Build (a), (b) and (d) now, and treat (c) as a question? Yes / no. For (c), what should the mini autograph show: a small line of the pitch you sang, or something else?
+
+**Heat clef (aqf3j).** "Make the G clef a little bit more accurate", and keep the thin stroke.
+- Q4. Redraw the treble clef as a proper spiral in the thin stroke? Yes / no.
+
+**Ripples up and down (epjvo).** "Default for the up-and-down to be sustained and for the visuals to be slow; five tone is fine."
+- Q5. Set the default to Sustain with slow visuals, and keep five tones? Yes / no.
+
+**Breathing garden, save sessions (tf3ru).** Clicking breathes in and lets go out. The last five sessions are recorded so the breathing can be tuned later.
+- Q6. Where should the last five sessions be kept: on this device only (the same as the longest breath now), or in the family table? Device only is the safe choice for a child's breath data.
+- Q7. Do you want a click to breathe in and another to let go, instead of the hold you have now?
+
+**Marbles (8kgzh, af0ag, 5j13f, 2b411, 4aj34).** Five notes, all new. Marbles has no speed, mood or energy control yet.
+- Q8. Speed: two fingers slide up to speed up and down to slow down? Yes / no.
+- Q9. Mood: two fingers slide left for minor (sad) and right for major (happy)? Yes / no.
+- Q10. Energy: two fingers pull apart and pinch together to change bounce. Today it sits near 0.8 and you want about 1.0 to 1.5. Is 1.5 meant to make the marbles bounce higher than they drop, and is 1.0 "dead"? Give the numbers you want at the two ends.
+- Q11. Pegs: give the sides more space so a note doesn't get caught on them. Yes / no?
+- Q12. Settings toggles: one toggle for each two-finger control (speed, mood, energy), or one toggle for all two-finger controls? Which?
+
+  Answer:
+
+---
+
+## Closed (2026-11-21)
+
+No answers were given to this round, so nothing below was built or marked done from it. The questions and the twelve items (A 1–8, B Q1–Q12) carry forward unchanged into `convo/convo v0.13.md`, where they can be answered. The 0.3.3 items are still waiting for a yes or no before they are marked done in the table.
