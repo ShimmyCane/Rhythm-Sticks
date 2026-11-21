@@ -13,6 +13,7 @@
       if (!RS.settings.keepGear) hideTimer = setTimeout(function () { gear.classList.remove('show'); }, 2000);
     },
     open: function () {
+      fillBreathLog();
       drawer.classList.add('open'); drawer.setAttribute('aria-hidden', 'false');
       document.body.classList.add('drawerOpen');
       clearTimeout(hideTimer);
@@ -24,6 +25,18 @@
     },
   };
 
+  // The last five breathing sessions, kept on this device only.
+  function fillBreathLog() {
+    var box = $('breathLog'); if (!box) return;
+    var list = RS.modes.breathe && RS.modes.breathe.sessions ? RS.modes.breathe.sessions() : [];
+    box.textContent = '';
+    if (!list.length) { var n = document.createElement('small'); n.textContent = 'None yet'; box.appendChild(n); return; }
+    list.slice().reverse().forEach(function (r) {
+      var d = new Date(r.at), line = document.createElement('div');
+      line.textContent = d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) + ' · ' + r.garden + ' · ' + r.breaths + ' breaths · longest ' + r.longest + ' s · average ' + r.average + ' s';
+      box.appendChild(line);
+    });
+  }
   function syncControls() {
     document.querySelectorAll('[data-key]').forEach(function (el) {
       var v = RS.settings[el.dataset.key];
@@ -171,6 +184,7 @@
     RS.onMode(showNarr);
     $('versionText').textContent = 'v' + RS.version;
     [
+      '0.4.0: from your notes. Two fingers is redone: draw a line for a melody, a circle for one long note, three fingers make a triangle chord, four make a square pulse, two more fingers set the loudness, trails fade, no split screen. Dot loop: a new ring grows at the outside and the others shrink to dots and dashes. Marbles: two fingers change speed, mood (sad or happy) and bounce, with a switch for each in ⚙️; more room at the sides and stuck marbles get a nudge. Echo listens more softly and can wait while it sings. Heat: a truer treble clef. Ripples start on Sustain with slow rings. Breathing garden: tap to breathe in, tap to breathe out; the last five sessions are kept on this device.',
       '0.3.3: the microphone rests after 30 seconds with nothing heard (a tap wakes it) and names another app if it is busy; one panel explains the current mode; Ripples card is two sentences; Strings: every pluck wakes the sound; Heat view dots fade after 3 seconds; Breathing garden: no countdown arc, the sun crosses in five minutes; Dot loop: two taps clear the middle; Two fingers: a wider note range.',
       '0.3.2: fixes the iPhone "no microphone" error. An earlier audio setting ("playback") stopped the browser from capturing the microphone; it now asks for the "play-and-record" session when the microphone starts.',
       '0.3.1: notes marked done elsewhere show as done here, and notes from other devices appear; choose All to see the done ones.',

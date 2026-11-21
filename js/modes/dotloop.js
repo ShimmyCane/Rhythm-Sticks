@@ -1,6 +1,7 @@
 // Mode 9: Dot loop. Rings of dots, one ring for each sound, and a hand that sweeps round. Tap a dot to switch it on or off.
-// A new ring appears only when the one before it has a beat, up to eight. Tap a ring and it slides to the front, large and easy
-// to edit, while the others shrink behind it so you can still see them all. The middle circle clears everything.
+// A new ring appears only when the one before it has a beat, up to eight, and it grows in at the outside, selected. The other
+// rings shrink toward the middle into small marks (a dot for a beat that is on, a dash for one that is off) so you can still see
+// them all. Tap a ring and it slides to the outside, large and easy to edit. The middle circle clears everything (two taps).
 // Tempo follows the visual speed setting.
 (function () {
   'use strict';
@@ -16,7 +17,7 @@
     { name: 'low bell', col: '#c9e8a6', play: function (v) { RS.audio.bell(RS.audio.mtof(48), v, 1.0); } },
     { name: 'high bell', col: '#f6c6e0', play: function (v) { RS.audio.bell(RS.audio.mtof(76), v, 0.9); } },
   ];
-  var S, rings, sel, tot, lastTot, ang, flashes, bursts, clearT, nVis, clearArm = 0;
+  var S, rings, sel, tot, lastTot, ang, flashes, bursts, clearT, nVis, prevVis = 1, clearArm = 0;
 
   function reset(seed) {
     rings = TRACKS.map(function (t, k) {
@@ -24,7 +25,7 @@
       return { on: on, slot: k, appear: k === 0 ? 1 : 0 };
     });
     if (seed) { rings[0].on[0] = 1; rings[0].on[8] = 1; }
-    sel = 0; tot = -0.001; lastTot = -0.001; ang = 0; flashes = {}; bursts = []; clearT = 0; nVis = 1;
+    sel = 0; tot = -0.001; lastTot = -0.001; ang = 0; flashes = {}; bursts = []; clearT = 0; nVis = prevVis = visibleCount();
   }
   M.start = function (stage) { S = stage; reset(true); };
   M.stop = function () {};
@@ -37,9 +38,9 @@
     return n;
   }
   function geom() {
-    var m = Math.min(S.w, S.h), Rsel = m * 0.4, Rc0 = Rsel * 0.8, floor = m * 0.115, n = Math.max(1, nVis);
+    var m = Math.min(S.w, S.h), Rsel = m * 0.4, Rc0 = Rsel * 0.66, floor = m * 0.12, n = Math.max(1, nVis);
     var dstep = n > 2 ? Math.min(m * 0.05, (Rc0 - floor) / (n - 2)) : m * 0.05;
-    return { cx: S.w / 2, cy: S.h / 2, m: m, Rsel: Rsel, Rc0: Rc0, dstep: dstep, centre: m * 0.07, big: m * 0.036, small: Math.max(5, Math.min(m * 0.016, dstep * 0.38)) };
+    return { cx: S.w / 2, cy: S.h / 2, m: m, Rsel: Rsel, Rc0: Rc0, dstep: dstep, centre: m * 0.07, big: m * 0.036, small: Math.max(3, Math.min(m * 0.012, dstep * 0.3)) };
   }
   function radiusOf(G, slot) { return slot <= 1 ? G.Rsel + (G.Rc0 - G.Rsel) * slot : G.Rc0 - (slot - 1) * G.dstep; }
   function dotR(G, slot) { return G.big + (G.small - G.big) * Math.min(1, slot); }
@@ -86,6 +87,8 @@
   M.draw = function (g, w, h, dt) {
     var t = performance.now() / 1000, sp = RS.speed(), i, k;
     nVis = visibleCount();
+    if (nVis > prevVis) sel = nVis - 1;                       // a new ring grows in at the outside and is the one you edit
+    prevVis = nVis;
     if (sel >= nVis) sel = nVis - 1;
     var G = geom();
     g.fillStyle = RS.pal.vanilla; g.fillRect(0, 0, w, h);
@@ -116,12 +119,25 @@
     order.forEach(function (k) {
       var r = rings[k], rad = radiusOf(G, r.slot), isSel = k === sel;
       g.globalAlpha = r.appear;
-      g.strokeStyle = isSel ? TRACKS[k].col : 'rgba(47,45,61,0.18)'; g.lineWidth = isSel ? 14 : 5; g.lineCap = 'round';
+      g.strokeStyle = isSel ? TRACKS[k].col : 'rgba(47,45,61,0.14)'; g.lineWidth = isSel ? 14 : (r.slot > 0.6 ? 2 : 5); g.lineCap = 'round';
       if (isSel) { g.shadowColor = TRACKS[k].col; g.shadowBlur = 12; }
       g.beginPath(); g.arc(G.cx, G.cy, rad, 0, Math.PI * 2); g.stroke(); g.shadowBlur = 0;
       if (isSel) { g.strokeStyle = 'rgba(47,45,61,0.22)'; g.lineWidth = 3; g.beginPath(); g.arc(G.cx, G.cy, rad + 9, 0, Math.PI * 2); g.stroke(); g.beginPath(); g.arc(G.cx, G.cy, rad - 9, 0, Math.PI * 2); g.stroke(); }
+      var compact = !isSel && r.slot > 0.6;                  // a shrunken ring: a dot for a beat, a dash for a rest
       for (i = 0; i < STEPS; i++) {
         var p = dotPos(G, r, i), on = r.on[i] > 0, f = Math.max(0, 1 - (t - (flashes[k + ':' + i] || -9)) / 0.35), dr = p.r * (1 + f * 0.5);
+        if (compact) {
+          if (on) {
+            g.beginPath(); g.arc(p.x, p.y, Math.max(3, p.r * 1.1) * (1 + f * 0.6), 0, Math.PI * 2);
+            g.fillStyle = TRACKS[k].col; g.shadowColor = TRACKS[k].col; g.shadowBlur = 4 + 14 * f; g.fill(); g.shadowBlur = 0;
+            g.strokeStyle = RS.pal.ink; g.lineWidth = 1.5; g.stroke();
+          } else {
+            var tx = -Math.sin(p.a) * Math.max(3, p.r * 1.1), ty = Math.cos(p.a) * Math.max(3, p.r * 1.1);
+            g.strokeStyle = 'rgba(47,45,61,0.5)'; g.lineWidth = 2.5; g.lineCap = 'round';
+            g.beginPath(); g.moveTo(p.x - tx, p.y - ty); g.lineTo(p.x + tx, p.y + ty); g.stroke();
+          }
+          continue;
+        }
         g.beginPath(); g.arc(p.x, p.y, dr, 0, Math.PI * 2);
         g.fillStyle = on ? TRACKS[k].col : 'rgba(255,255,255,0.75)';
         if (on) { g.shadowColor = TRACKS[k].col; g.shadowBlur = 6 + 22 * f; }

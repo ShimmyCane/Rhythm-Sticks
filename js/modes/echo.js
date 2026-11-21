@@ -9,7 +9,7 @@
   'use strict';
   var M = RS.modes.echo = { id: 'echo', name: 'Echo', icon: '🗣️', mic: true };
   var S, unsub, level, good, poor, phase, round, hits, lastHit, demo, demoStart, demoEnd, playFrom, playUntil, score, scoreAt, kind, lastKind, pattern, answer, answerStart, answerEnd, waiting, fixed;
-  var KINDS = ['same', 'fast', 'up', 'plus', 'rev'];
+  var KINDS = ['same', 'fast', 'up', 'plus', 'rev'], waitUntil = 0;
   var GAP = 1.0;                                            // seconds of quiet before a riff answer
 
   function now() { return performance.now() / 1000; }
@@ -25,10 +25,15 @@
   M.start = function (stage) {
     S = stage; level = loadLevel(); good = 0; poor = 0; round = 0; lastKind = ''; round = 0; resetRound();
     fixed = setting(); if (fixed) level = fixed;
+    RS.mic.setBoost(0.5);                                      // Echo listens more softly: no need to shout close to the microphone
     RS.mic.start();
-    unsub = RS.mic.onOnset(function (s) { hit(s); });
+    waitUntil = 0;
+    unsub = RS.mic.onOnset(function (s) {
+      if (RS.settings.echoWait !== 'off' && now() < waitUntil) return;      // the microphone waits while Echo sings, so it does not hear itself
+      hit(s);
+    });
   };
-  M.stop = function () { if (unsub) unsub(); unsub = null; RS.mic.stop(); };
+  M.stop = function () { if (unsub) unsub(); unsub = null; RS.mic.setBoost(0); RS.mic.stop(); };
   RS.onSet(function (k) { if (k === 'echoLevel' && RS.curId === 'echo') { fixed = setting(); if (fixed) level = fixed; resetRound(); } });
 
   // ---------- rounds ----------
@@ -154,6 +159,7 @@
     }
 
     // ---- timing of the round ----
+    if (phase === 'listen' || phase === 'answer') waitUntil = t + 0.4;         // quiet for the microphone while Echo sings, and a moment after
     if (phase === 'listen') {
       demo.forEach(function (d) { if (!d.done && t >= demoStart + d.at) { d.done = true; d.pulse = t; RS.audio.voiceNote(step2freq(d.step), 0.8, d === demo[0] ? 0.8 : 0.4); } });
       if (t > demoEnd) { phase = 'play'; playFrom = t - 0.2; playUntil = t + (demo[demo.length - 1].at + 0.8) * (level === 3 ? 1.4 : 1.6) + 2.5; hits = []; }

@@ -1,4 +1,5 @@
-// Hidden mode: the breathing garden. It listens for the sound of your breath (or a held finger, which means "breathing out")
+// Hidden mode: the breathing garden. It listens for the sound of your breath (or taps: tap to breathe in, tap again to breathe out,
+// tap again to start the next breath in)
 // and the longer and steadier your breaths, the calmer the garden gets. Three gardens:
 //   Sand rake:  a long breath out draws a rake through the sand in a spiral around the stones.
 //   Fountain:   a long breath out fills a bamboo spout until it tips with a knock and rings the pond. The spout asks a little more each time.
@@ -8,7 +9,7 @@
   'use strict';
   var M = RS.modes.breathe = { id: 'breathe', name: 'Breathing garden', icon: '🌿', mic: true, hidden: true };
   var S, kind = 'sand', calm = 0, stars = [], best = 0, session = { exhales: [], longest: 0 };
-  var sense, touching = {}, ignoreUntil = 0;
+  var sense, touching = {}, ignoreUntil = 0, latch = '';          // latch: '' (not started), 'in' or 'out' for tapping
   var sand, fountain, blossom;
 
   function now() { return performance.now() / 1000; }
@@ -20,7 +21,8 @@
     sense = { floor: 0.002, sm: 0, active: false, start: 0, lastLoud: 0, ratio: 0.5, type: '', last: 'in', out: false, outStart: 0, outT: 0, lastLen: 0, src: 'mic', completed: null };
   }
   function updateSense(dt, t) {
-    var an = RS.mic.analyser, anyTouch = Object.keys(touching).length > 0, active = false, fromTouch = anyTouch;
+    if (latch === 'out' && sense.out && sense.outT > 14) latch = 'in';          // a tapped breath out never runs on for ever
+    var an = RS.mic.analyser, active = false, fromTouch = latch === 'out';
     if (an && RS.mic.state === 'on' && t > ignoreUntil) {
       var lvl = RS.mic.level, fd = RS.mic.freqData, bh = an.context.sampleRate / an.fftSize;
       sense.sm += (lvl - sense.sm) * Math.min(1, dt * 12);
@@ -54,6 +56,7 @@
   function exhaleEnded(len) {
     if (len < 0.6) return;
     session.exhales.push(len); if (session.exhales.length > 12) session.exhales.shift();
+    session.all.push(Math.round(len * 10) / 10); if (session.all.length > 300) session.all.shift();
     session.longest = Math.max(session.longest, len);
     if (len > best) { best = len; try { localStorage.setItem('rs.breathBest', String(Math.round(best * 10) / 10)); } catch (e) { /* storage blocked */ } }
   }
@@ -62,17 +65,32 @@
 
   M.start = function (stage) {
     S = stage; kind = RS.settings.garden || 'sand'; calm = 0; touching = {}; ignoreUntil = 0;
-    session = { exhales: [], longest: 0 };
+    session = { exhales: [], longest: 0, all: [], t0: Date.now() }; latch = '';
     try { best = parseFloat(localStorage.getItem('rs.breathBest') || '0') || 0; } catch (e) { best = 0; }
     stars = [3, 5, 7, 9, 11].map(function (sec) { return { sec: sec, lit: 0 }; });
     resetSense(); build();
     RS.mic.start();
   };
-  M.stop = function () { RS.mic.stop(); touching = {}; };
+  M.stop = function () { saveSession(); RS.mic.stop(); touching = {}; latch = ''; };
+  // The last five sessions are kept on this device only (never sent anywhere), so breathing can be tuned later.
+  var LOGKEY = 'rs.breathSessions';
+  function readLog() { try { var a = JSON.parse(localStorage.getItem(LOGKEY) || '[]'); return Array.isArray(a) ? a : []; } catch (e) { return []; } }
+  function liveRecord() {
+    if (!session || !session.all || !session.all.length) return null;
+    var a = session.all, sum = a.reduce(function (x, y) { return x + y; }, 0);
+    return { at: new Date(session.t0).toISOString(), garden: kind, breaths: a.length, secs: Math.round((Date.now() - session.t0) / 1000), longest: Math.max.apply(null, a), average: Math.round(sum / a.length * 10) / 10, exhales: a.slice(-60) };
+  }
+  function saveSession() {
+    var rec = liveRecord(); if (!rec) return;
+    var log = readLog().filter(function (r) { return r.at !== rec.at; }); log.push(rec);
+    try { localStorage.setItem(LOGKEY, JSON.stringify(log.slice(-5))); } catch (e) { /* storage blocked */ }
+  }
+  M.sessions = function () { var log = readLog().filter(function (r) { var l = liveRecord(); return !l || r.at !== l.at; }), l = liveRecord(); if (l) log.push(l); return log.slice(-5); };
+  window.addEventListener('pagehide', function () { if (RS.curId === 'breathe') saveSession(); });
   M.resize = function () { build(); };
   M.setKind = function (k) { kind = k; build(); };
   RS.onSet(function (key, v) { if (key === 'garden' && RS.curId === 'breathe') M.setKind(v); });
-  M.down = function (id) { touching[id] = true; };
+  M.down = function (id) { touching[id] = true; latch = latch === 'in' ? 'out' : 'in'; };      // a tap: breathe in, then out, then in...
   M.up = function (id) { delete touching[id]; };
 
   function build() { if (!S) return; if (kind === 'fountain') buildFountain(); else if (kind === 'blossom') buildBlossom(); else buildSand(); }
@@ -112,6 +130,10 @@
     var cx = w - 60, cy = h - 150, R = 24;
     g.lineCap = 'round'; g.lineWidth = 7; g.strokeStyle = 'rgba(47,45,61,0.18)';
     g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
+    if (latch === 'in' && !sense.out) {                         // tapped "breathing in": a sky ring with an arrow up
+      g.strokeStyle = RS.pal.sky; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
+      g.fillStyle = RS.pal.ink; g.beginPath(); g.moveTo(cx, cy - 9); g.lineTo(cx - 8, cy + 5); g.lineTo(cx + 8, cy + 5); g.closePath(); g.fill();
+    }
     if (sense.out) {
       g.strokeStyle = RS.pal.coral; g.beginPath(); g.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + clamp(sense.outT / 12, 0, 1) * Math.PI * 2); g.stroke();
     }

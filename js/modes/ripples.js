@@ -105,7 +105,7 @@
   };
 
   M.draw = function (g, w, h, dt) {
-    var sp = RS.speed(), life = 3.4, now = performance.now();
+    var sp = RS.speed() * 0.6, life = 3.4, now = performance.now();   // slow, calm rings
     g.drawImage(bg, 0, 0, w, h);
     Object.keys(touches).forEach(function (id) {            // a held touch keeps dropping rings
       var t = touches[id];

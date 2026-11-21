@@ -93,7 +93,11 @@
     });
     return workletPromise;
   }
-  RS.onSet(function (k, v) { if (k === 'sens' && node) node.port.postMessage({ sens: v }); });
+  // Some modes listen more softly than the slider says (Echo): boost is added to the sensitivity, up to the top.
+  M.boost = 0;
+  function eff() { return Math.max(0, Math.min(1, RS.settings.sens + (M.boost || 0))); }
+  M.setBoost = function (b) { M.boost = b || 0; if (node) node.port.postMessage({ sens: eff() }); };
+  RS.onSet(function (k, v) { if (k === 'sens' && node) node.port.postMessage({ sens: eff() }); });
 
   function attach(s) {
     stream = s;
@@ -117,7 +121,7 @@
       try {
         node = new AudioWorkletNode(c, 'rs-onset', { numberOfInputs: 1, numberOfOutputs: 0 });
         node.port.onmessage = function (e) { nodeAt = performance.now(); if (e.data.o != null) fire(e.data.o); };
-        node.port.postMessage({ sens: RS.settings.sens });
+        node.port.postMessage({ sens: eff() });
         src.connect(node);
         nodeAt = performance.now();
         M.engine = 'worklet';
@@ -220,7 +224,7 @@
     var e = 0;
     for (k = lo; k <= hi; k++) { var v = M.freqData[k] / 255; e += v * v; }
     e /= (hi - lo + 1);
-    var s = RS.settings.sens;
+    var s = eff();
     var thr = base * (2.2 + (1 - s) * 3) + 0.01 + (1 - s) * 0.06;
     var now = performance.now();
     if (e > thr && e > prev * 1.4 && now - lastOnset > 140) {
